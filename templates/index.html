@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,50 +8,26 @@
   <style>
     body {
       padding: 20px;
-      background-color: var(--bs-body-bg);
-      color: var(--bs-body-color);
-      transition: background-color 0.4s ease, color 0.4s ease;
+      background: #f5f5f5;
     }
     .container {
       max-width: 600px;
       margin: auto;
-      background: var(--bs-body-bg);
+      background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-      animation: slideIn 0.6s ease;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
     }
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .dark-toggle {
-      display: flex;
-      justify-content: end;
-      margin-bottom: 10px;
-    }
-    .form-switch .form-check-input {
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="dark-toggle">
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="darkModeToggle">
-        <label class="form-check-label" for="darkModeToggle">🌙 Dark Mode</label>
-      </div>
-    </div>
-
     <h2 class="mb-4 text-center">🕵️‍♂️ Steganography Tool</h2>
-
     <form method="POST" enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label">Choose Mode:</label>
@@ -68,7 +44,7 @@
         <label class="form-label">Enter Message:</label>
         <textarea name="message" class="form-control" rows="4" placeholder="Type your secret message..."></textarea>
       </div>
-      <button type="submit" class="btn btn-primary w-100">🚀 Submit</button>
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
     </form>
 
     {% if result %}
@@ -76,35 +52,29 @@
         🔓 <strong>Hidden Message Found:</strong><br>
         <div id="decodedMessage">{{ result }}</div>
       </div>
+      <script>
+        setTimeout(() => {
+          document.querySelector('.alert').style.display = 'none';
+        }, 20000); // Hide after 20 seconds
+      </script>
     {% endif %}
   </div>
 
   <script>
-    // Show/hide message box
+    // Hide message box if decode selected
     const modeSelect = document.querySelector('select[name="mode"]');
     const messageBox = document.getElementById('messageBox');
-    modeSelect.addEventListener('change', () => {
-      messageBox.style.display = modeSelect.value === 'decode' ? 'none' : 'block';
-    });
-    modeSelect.dispatchEvent(new Event('change')); // initialize
 
-    // Dark Mode toggle
-    const toggle = document.getElementById('darkModeToggle');
-    toggle.addEventListener('change', () => {
-      document.documentElement.setAttribute('data-bs-theme', toggle.checked ? 'dark' : 'light');
-    });
-
-    // Optional: Keep theme preference in local storage
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        toggle.checked = true;
+    function toggleMessageBox() {
+      if (modeSelect.value === 'decode') {
+        messageBox.style.display = 'none';
+      } else {
+        messageBox.style.display = 'block';
       }
-    });
-    toggle.addEventListener('change', () => {
-      localStorage.setItem('theme', toggle.checked ? 'dark' : 'light');
-    });
+    }
+
+    modeSelect.addEventListener('change', toggleMessageBox);
+    toggleMessageBox(); // initial load
   </script>
 </body>
 </html>
