@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, send_file
 from PIL import Image
 import io
+import os
 
 app = Flask(__name__)
 
@@ -9,16 +10,15 @@ def encode_image(image, message):
     img = image.convert('RGB')
     pixels = img.load()
 
-    # Convert message to binary and add delimiter
     binary = ''.join(format(ord(c), '08b') for c in message) + '1111111111111110'  # EOF marker
-
     data_index = 0
+
     for y in range(img.height):
         for x in range(img.width):
             if data_index >= len(binary):
                 break
             r, g, b = pixels[x, y]
-            r = (r & ~1) | int(binary[data_index])  # set LSB
+            r = (r & ~1) | int(binary[data_index])
             data_index += 1
             if data_index < len(binary):
                 g = (g & ~1) | int(binary[data_index])
@@ -50,7 +50,7 @@ def decode_image(image):
 
     chars = [chr(int(bits[i:i+8], 2)) for i in range(0, len(bits), 8)]
     msg = ''.join(chars)
-    return msg.split('\xFE')[0]  # cut off at EOF marker
+    return msg.split('\xFE')[0]  # Cut off at EOF marker
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -71,4 +71,5 @@ def index():
     return render_template('index.html', result=result)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
