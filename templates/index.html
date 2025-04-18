@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🕵️ Steganography Tool</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: white;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      padding: 30px 40px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input[type="file"],
+    select,
+    textarea,
+    input[type="text"],
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #4f46e5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #3730a3;
+    }
+
+    .result {
+      background: #f0f4ff;
+      border: 1px solid #bcd;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      color: #222;
+      transition: opacity 1s ease;
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🕵️‍♂️ Steganography Messaging Tool</h2>
+    <form method="POST" enctype="multipart/form-data">
+      <label for="mode">Choose Mode:</label>
+      <select name="mode" id="mode">
+        <option value="encode">Encode Message</option>
+        <option value="decode">Decode Message</option>
+      </select>
+
+      <label for="image">Upload Image:</label>
+      <input type="file" name="image" id="image" required />
+
+      <label for="message">Message to Hide (if encoding):</label>
+      <textarea name="message" id="message" rows="4" placeholder="Type your secret message here..."></textarea>
+
+      <button type="submit">🔐 Submit</button>
+    </form>
+
+    {% if result %}
+    <div class="result" id="resultBox">
+      <h3>🔓 Hidden Message Found:</h3>
+      {{ result }}
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    // Hide result after 20 seconds
+    window.addEventListener('DOMContentLoaded', () => {
+      const box = document.getElementById('resultBox');
+      if (box) {
+        setTimeout(() => {
+          box.classList.add('hidden');
+        }, 20000); // 20,000ms = 20 seconds
+      }
+    });
+  </script>
+</body>
+</html>
