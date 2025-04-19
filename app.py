@@ -10,7 +10,8 @@ def encode_image(image, message):
     img = image.convert('RGB')
     pixels = img.load()
 
-    binary = ''.join(format(ord(c), '08b') for c in message) + '1111111111111110'  # EOF marker
+    message += '\xFE'  # Use a clear EOF marker (one character)
+    binary = ''.join(format(ord(c), '08b') for c in message)
     data_index = 0
 
     for y in range(img.height):
@@ -48,9 +49,17 @@ def decode_image(image):
             bits += str(g & 1)
             bits += str(b & 1)
 
-    chars = [chr(int(bits[i:i+8], 2)) for i in range(0, len(bits), 8)]
-    msg = ''.join(chars)
-    return msg.split('\xFE')[0]  # Cut off at EOF marker
+    chars = []
+    for i in range(0, len(bits), 8):
+        byte = bits[i:i+8]
+        if len(byte) < 8:
+            break
+        char = chr(int(byte, 2))
+        if char == '\xFE':  # Stop at EOF marker
+            break
+        chars.append(char)
+
+    return ''.join(chars)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
