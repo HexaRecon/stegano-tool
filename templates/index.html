@@ -13,7 +13,7 @@
       transition: background-color 0.4s ease, color 0.4s ease;
     }
     .container {
-      max-width: 600px;
+      max-width: 650px;
       margin: auto;
       background: var(--bs-body-bg);
       padding: 30px;
@@ -55,19 +55,46 @@
     <form method="POST" enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label">Choose Mode:</label>
-        <select name="mode" class="form-select" required>
+        <select name="mode" class="form-select" required id="modeSelect">
           <option value="encode">Encode Message</option>
           <option value="decode">Decode Message</option>
         </select>
       </div>
+
       <div class="mb-3">
         <label class="form-label">Upload Image:</label>
         <input type="file" name="image" class="form-control" accept="image/*" required>
       </div>
+
+      <!-- Bit depth selection -->
+      <div class="mb-3" id="bitDepthBox">
+        <label class="form-label">Bit Depth (per color channel):</label>
+        <select name="bit_depth" class="form-select">
+          <option value="1" selected>1-bit (least detectable)</option>
+          <option value="2">2-bit</option>
+          <option value="3">3-bit</option>
+          <option value="4">4-bit (maximum capacity)</option>
+        </select>
+      </div>
+
+      <!-- Message Input -->
       <div class="mb-3" id="messageBox">
         <label class="form-label">Enter Message:</label>
         <textarea name="message" class="form-control" rows="4" placeholder="Type your secret message..."></textarea>
       </div>
+
+      <!-- File Input for text file -->
+      <div class="mb-3" id="fileBox">
+        <label class="form-label">Or Upload .txt File (Optional):</label>
+        <input type="file" name="message_file" class="form-control" accept=".txt">
+      </div>
+
+      <!-- Encryption key -->
+      <div class="mb-3" id="keyBox">
+        <label class="form-label">Encryption Key (optional):</label>
+        <input type="text" name="key" class="form-control" placeholder="Enter encryption key for added security">
+      </div>
+
       <button type="submit" class="btn btn-primary w-100">🚀 Submit</button>
     </form>
 
@@ -80,30 +107,34 @@
   </div>
 
   <script>
-    // Show/hide message box
-    const modeSelect = document.querySelector('select[name="mode"]');
+    const modeSelect = document.getElementById('modeSelect');
     const messageBox = document.getElementById('messageBox');
-    modeSelect.addEventListener('change', () => {
-      messageBox.style.display = modeSelect.value === 'decode' ? 'none' : 'block';
-    });
-    modeSelect.dispatchEvent(new Event('change')); // initialize
+    const fileBox = document.getElementById('fileBox');
+    const keyBox = document.getElementById('keyBox');
+    const bitDepthBox = document.getElementById('bitDepthBox');
 
-    // Dark Mode toggle
+    function updateUI() {
+      const isDecode = modeSelect.value === 'decode';
+      messageBox.style.display = fileBox.style.display = keyBox.style.display = bitDepthBox.style.display = isDecode ? 'none' : 'block';
+    }
+
+    modeSelect.addEventListener('change', updateUI);
+    updateUI(); // Initialize on load
+
+    // Dark mode toggle
     const toggle = document.getElementById('darkModeToggle');
     toggle.addEventListener('change', () => {
-      document.documentElement.setAttribute('data-bs-theme', toggle.checked ? 'dark' : 'light');
+      const theme = toggle.checked ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-bs-theme', theme);
+      localStorage.setItem('theme', theme);
     });
 
-    // Optional: Keep theme preference in local storage
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         document.documentElement.setAttribute('data-bs-theme', 'dark');
         toggle.checked = true;
       }
-    });
-    toggle.addEventListener('change', () => {
-      localStorage.setItem('theme', toggle.checked ? 'dark' : 'light');
     });
   </script>
 </body>
