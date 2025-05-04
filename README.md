@@ -12,8 +12,9 @@ A simple and user-friendly **steganography desktop application** built using **P
 - 💡 Easy to use interface.
 
 ## 🖼️ GUI Preview
+![image](https://github.com/user-attachments/assets/b23d4d99-1136-41b2-98fc-8f66ac577a4d)
 
-> *(Add a screenshot here, if available)*
+
 
 ## 🧰 Technologies Used
 
@@ -60,9 +61,6 @@ Decoding:
 
     Click "Decode" to view the hidden message.
 
-📜 License
-
-This project is licensed under the MIT License.
 🤝 Contributing
 
 Feel free to fork this repo, open issues, or submit pull requests. Contributions are welcome!
